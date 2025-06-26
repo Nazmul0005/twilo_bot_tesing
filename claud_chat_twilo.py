@@ -2,9 +2,10 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import Response
 from twilio.rest import Client
 from twilio.twiml.messaging_response import MessagingResponse
-import openai
+from openai import OpenAI
 import json
 import os
+from datetime import datetime
 from config import (
     TWILIO_ACCOUNT_SID, 
     TWILIO_AUTH_TOKEN, 
@@ -18,7 +19,7 @@ app = FastAPI()
 twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 # Initialize OpenAI client
-openai.api_key = OPENAI_API_KEY
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Store conversation history (in production, use a database)
 conversation_history = {}
@@ -37,7 +38,7 @@ def get_chatbot_response(user_message: str, phone_number: str) -> str:
     
     try:
         # Get response from OpenAI
-        response = openai.ChatCompletion.create(
+        response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",  # or "gpt-4" if you have access
             messages=conversation_history[phone_number],
             max_tokens=150,  # Keep responses short for SMS
@@ -63,7 +64,7 @@ def get_chatbot_response(user_message: str, phone_number: str) -> str:
 async def chat_endpoint(query: str):
     """Direct chat endpoint for testing (your original idea)"""
     try:
-        response = openai.ChatCompletion.create(
+        response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": query}],
             max_tokens=500,
