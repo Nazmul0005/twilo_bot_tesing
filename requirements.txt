@@ -1,0 +1,21 @@
+# requirements.txt
+
+# Web framework and server
+fastapi
+uvicorn[standard]
+
+# Twilio SMS integration
+twilio
+
+# OpenAI API
+openai
+
+# Environment variables management
+python-dotenv
+
+# Form data handling for FastAPI
+python-multipart
+
+# Additional utilities (optional but recommended)
+pydantic
+requests
