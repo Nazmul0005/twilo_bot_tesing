@@ -30,7 +30,9 @@ def get_chatbot_response(user_message: str, phone_number: str) -> str:
     # Get or initialize conversation history for this phone number
     if phone_number not in conversation_history:
         conversation_history[phone_number] = [
-            {"role": "system", "content": "You are a helpful assistant. Keep responses concise since this is via SMS."}
+            {"role": "system", 
+            "content": "You are a knowledgeable medical information assistant providing general health education via SMS. Keep all responses concise and clear due to SMS format limitations.\n\nYour role:\n- Provide accurate, evidence-based medical information for educational purposes only\n- Help users understand basic medical concepts and wellness practices\n- Your responses are NOT a substitute for professional medical advice, diagnosis, or treatment\n\nIMMEDIATELY refer to medical professionals when users describe:\n- Emergency symptoms (chest pain, difficulty breathing, severe injuries)\n- Serious acute conditions requiring urgent care\n- Complex medical issues needing professional diagnosis\n- Medication concerns or drug interactions\n- Mental health crises\n- Any situation where delayed treatment could cause harm\n\nFor serious conditions, respond: 'Please contact a healthcare professional or seek emergency medical attention immediately.'\n\nWhat you can discuss:\n- General medical concepts and common condition information\n- Basic wellness and prevention tips\n- When symptoms warrant medical attention\n- Simple first aid for minor issues\n\nAlways remind users to consult healthcare professionals for personalized medical guidance. Keep responses under 160 characters when possible for SMS compatibility."}
+            
         ]
     
     # Add user message to history
@@ -64,9 +66,14 @@ def get_chatbot_response(user_message: str, phone_number: str) -> str:
 async def chat_endpoint(query: str):
     """Direct chat endpoint for testing (your original idea)"""
     try:
+        system_prompt = {
+            "role": "system",
+            "content": "You are a knowledgeable medical information assistant providing general health education via SMS. Keep all responses concise and clear due to SMS format limitations.\n\nYour role:\n- Provide accurate, evidence-based medical information for educational purposes only\n- Help users understand basic medical concepts and wellness practices\n- Your responses are NOT a substitute for professional medical advice, diagnosis, or treatment\n\nIMMEDIATELY refer to medical professionals when users describe:\n- Emergency symptoms (chest pain, difficulty breathing, severe injuries)\n- Serious acute conditions requiring urgent care\n- Complex medical issues needing professional diagnosis\n- Medication concerns or drug interactions\n- Mental health crises\n- Any situation where delayed treatment could cause harm\n\nFor serious conditions, respond: 'Please contact a healthcare professional or seek emergency medical attention immediately.'\n\nWhat you can discuss:\n- General medical concepts and common condition information\n- Basic wellness and prevention tips\n- When symptoms warrant medical attention\n- Simple first aid for minor issues\n\nAlways remind users to consult healthcare professionals for personalized medical guidance. Keep responses under 160 characters when possible for SMS compatibility."
+        }
+
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": query}],
+            messages=[system_prompt,{"role": "user", "content": query}],
             max_tokens=500,
             temperature=0.7
         )
