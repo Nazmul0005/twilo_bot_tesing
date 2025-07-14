@@ -70,9 +70,9 @@ async def send_sms_message(
     http_request: Request, 
     request: Optional[SMSRequest] = None,
     # # Twilio webhook form parameters
-    # From: Optional[str] = Form(None),
-    # Body: Optional[str] = Form(None),
-    # To: Optional[str] = Form(None)
+    From: Optional[str] = Form(None),
+    Body: Optional[str] = Form(None),
+    To: Optional[str] = Form(None)
 ):
     """
     Unified endpoint for both manual API calls and Twilio webhook calls
