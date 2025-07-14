@@ -19,3 +19,14 @@ python-multipart
 # Additional utilities (optional but recommended)
 pydantic
 requests
+
+
+
+fastapi
+uvicorn
+python-dotenv
+pydantic
+langchain
+langchain-openai
+python-multipart
+twilio
